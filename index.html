@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoouqs</title>
+    <style>
+        body {
+            max-width: 100%;
+        }
+
+        img {
+            background-color: aliceblue;
+            max-width: 600px;
+            height: auto;
+        }
+        .images {
+            max-width: 100%;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Shoouqs</h1>
+        <p>Trying to make squoosh smaller</p>
+    </div>
+    <div>
+        <input type="file" name="img" id="img" accept="image/*">
+        <br>
+        <label for="q">
+            Image Quality
+            <input type="range" name="q" id="q" max="1" step="0.01" value="0.75">
+        </label> <input type="number" name="nq" id="nq">
+        <button id="encode">Encode</button>
+        <div class="images">
+            <img src="" alt="" id="srcimg">
+            <img src="" alt="" id="tarimg">
+        </div>
+    </div>
+    <script>
+        const imgPicker = document.querySelector("#img");
+        const encode = document.querySelector("#encode");
+        const q = document.querySelector("#q");
+        const nq = document.querySelector("#nq");
+        const canvas = document.createElement("canvas")
+        const ctx = canvas.getContext("2d");
+
+        let curImg;
+        let tarImg;
+
+        srcimg.onload = function() {
+            canvas.width = srcimg.naturalWidth
+            canvas.height = srcimg.naturalHeight
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.drawImage(srcimg, 0, 0)
+        }
+        imgPicker.oninput = function () {
+            curImg = URL.createObjectURL(this.files[0])
+            srcimg.src = curImg
+        }
+        
+        function encodeImg () {
+            tarimg.setAttribute("src", canvas.toDataURL("image/jpeg", parseFloat(q.value)))
+        }
+
+        encode.onclick = encodeImg
+        q.addEventListener("input", encodeImg)
+        nq.addEventListener("input", encodeImg)
+        q.addEventListener("input", () => {
+            nq.value = Math.round(q.value * 100)
+        })
+        nq.oninput = () => {
+            q.value = nq.value / 100
+        }
+    </script>
+</body>
+</html>
